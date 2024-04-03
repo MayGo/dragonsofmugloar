@@ -60,8 +60,6 @@ public class GameService {
         probabilities.put("Rather detrimental", 9);
         probabilities.put("Suicide mission", 10);
 
-        startGame();
-
     }
 
     public Message[] findEasiestJobs(Message[] messages,
@@ -76,7 +74,7 @@ public class GameService {
                     }
                 })
                 .sorted(Comparator.comparing(Message::getProbability)
-                        .thenComparing(Message::getExpiresIn))
+                        .thenComparing(Message::getExpiresIn, Comparator.reverseOrder()))
                 .toArray(Message[]::new);
 
     }
@@ -90,7 +88,6 @@ public class GameService {
 
     public boolean buyHealth() throws IOException {
         BuyItemSuccess data = buyProduct("hpot");
-
         return data.isShoppingSuccess();
     }
 
@@ -175,6 +172,8 @@ public class GameService {
 
     public void playTheGame() throws IOException {
         logger.info("Starting game...");
+
+        startGame();
 
         // We start with the easiest jobs. And after collecting enough gold we will
         // buy something and then we will start accepting harder jobs
