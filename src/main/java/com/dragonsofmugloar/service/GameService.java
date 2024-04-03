@@ -59,7 +59,10 @@ public class GameService {
         probabilities.put("Playing with fire", 8);
         probabilities.put("Rather detrimental", 9);
         probabilities.put("Suicide mission", 10);
+    }
 
+    public CommonGameData getGameData() {
+        return gameData;
     }
 
     public Message[] findEasiestJobs(Message[] messages,
@@ -127,7 +130,7 @@ public class GameService {
         return data;
     }
 
-    CommonGameData startGame() throws IOException {
+    public CommonGameData startGame() throws IOException {
         Call<GameData> call = gameApi.startGame();
         Response<GameData> response = call.execute();
         GameData data = response.body();
@@ -151,12 +154,10 @@ public class GameService {
 
     public Response<MessageSuccess> solveMessage(String adId) throws IOException {
         Call<MessageSuccess> callSolve = messageApi.solveMessage(gameId, adId);
-
         Response<MessageSuccess> resp = callSolve.execute();
 
         if (resp.isSuccessful()) {
             gameData = resp.body();
-
         }
 
         return resp;
@@ -224,7 +225,7 @@ public class GameService {
                     turnsWithoutBuying = turnsWithoutBuying + 1;
 
                     if (data.isSuccess()) {
-                        logger.info(" [ v ] Solved message: " + data.getMessage());
+                        logger.info("[ v ] Solved message: " + data.getMessage());
                     } else {
                         logger.info("[ x ] Failed to solve message: " + data.getMessage());
                         break;
@@ -246,7 +247,7 @@ public class GameService {
                 buyHealth();
             }
 
-            // buy something in every 7 turns
+            // buy something in every 7 turns if collected enough gold
             if (turnsWithoutBuying > 7 && gameData.getGold() >= 100) {
                 logger.info("[-----------------SHOP-----------------");
                 buyRandomItem();
@@ -262,7 +263,6 @@ public class GameService {
         } else {
             logger.info("[-----------------Game Won-----------------]");
             finishStatus = "Game Won";
-
         }
     }
 
