@@ -18,13 +18,3 @@ To build and run the application, follow these steps:
 ## Testing
 
 The project includes JUnit tests for the API interfaces and the main application. To run the tests, execute the test classes in your IDE or use the Maven command `mvn test`.
-
-## Contributing
-
-Contributions to this project are welcome. Feel free to open a pull request or submit an issue if you find any bugs or have any suggestions.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more information.
-
-This file is intentionally left blank.
