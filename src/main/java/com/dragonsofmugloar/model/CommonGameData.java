@@ -9,5 +9,4 @@ public class CommonGameData {
     private int score; // Score after the attempt
     private int highScore; // The current highest score
     private int turn; // Current turn number
-
 }

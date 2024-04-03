@@ -41,6 +41,8 @@ public class GameService {
 
     String finishStatus;
 
+    public boolean foundBug = false;
+
     public GameService(retrofit2.Retrofit retrofit, String name) throws IOException {
         gameApi = retrofit.create(GameApi.class);
         messageApi = retrofit.create(MessageApi.class);
@@ -63,6 +65,10 @@ public class GameService {
 
     public CommonGameData getGameData() {
         return gameData;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public Message[] findEasiestJobs(Message[] messages,
@@ -146,21 +152,30 @@ public class GameService {
         return responseMessages.body();
     }
 
-    public Investigation getReputation() throws IOException {
-        Call<Investigation> runInvestigation = investigationApi.runInvestigation(gameId);
-        Response<Investigation> responseMessages = runInvestigation.execute();
-        return responseMessages.body();
-    }
-
     public Response<MessageSuccess> solveMessage(String adId) throws IOException {
         Call<MessageSuccess> callSolve = messageApi.solveMessage(gameId, adId);
         Response<MessageSuccess> resp = callSolve.execute();
 
         if (resp.isSuccessful()) {
-            gameData = resp.body();
+            MessageSuccess newData = resp.body();
+            if (newData.getTurn() <= gameData.getTurn()) {// Turn should always increase
+                foundBug = true;
+                // Perhaps gold can be stolen from player, but turn should always increase
+                logger.warning(
+                        "Found a bug. Old turn: " + gameData.getTurn() + ", new turn: " + newData.getTurn()
+                                + ". Had gold:"
+                                + gameData.getGold() + ", new gold:" + newData.getGold());
+            }
+            gameData = newData;
         }
 
         return resp;
+    }
+
+    public Investigation getReputation() throws IOException {
+        Call<Investigation> runInvestigation = investigationApi.runInvestigation(gameId);
+        Response<Investigation> responseMessages = runInvestigation.execute();
+        return responseMessages.body();
     }
 
     private void sleep() {
@@ -269,6 +284,7 @@ public class GameService {
     void printStats() {
         // Display the game data
         logger.info("[-----------------Stats-----------------]");
+
         logger.info("Lives: " + gameData.getLives());
         logger.info("Gold: " + gameData.getGold());
         logger.info("Turn: " + gameData.getTurn());
@@ -282,9 +298,12 @@ public class GameService {
         logger.info("Underworld: " + reputation.getUnderworld());
     }
 
-    void printGameData() {
+    void printGameResults() {
         logger.info("----------------------------------" + playerName + "----------------------------------");
         logger.info("Game Status: " + finishStatus);
+        if (foundBug) {
+            logger.warning("Found a bug in this game");
+        }
         printStats();
     }
 }

@@ -6,15 +6,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ApplicationService {
+    private static final Logger logger = Logger.getLogger(ApplicationService.class.getName());
 
     @Value("${api.base.url}")
     private String baseUrl;
@@ -34,34 +38,33 @@ public class ApplicationService {
                 .client(client)
                 .build();
 
-        // Create a CountDownLatch with a count of 2
-        CountDownLatch latch = new CountDownLatch(2);
+        int n = 4; // Number of GameService instances
 
-        // Create an ExecutorService with a fixed thread pool size of 2
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        // Create a CountDownLatch with a count of n
+        CountDownLatch latch = new CountDownLatch(n);
 
-        // Create and submit the first GameService instance
-        GameService gameService1 = new GameService(retrofit, "Player 1");
-        executorService.submit(() -> {
-            try {
-                gameService1.playTheGame();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            latch.countDown(); // Decrease the latch count by 1
-        });
+        // Create an ExecutorService with a fixed thread pool size of n
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-        // Create and submit the second GameService instance
-        GameService gameService2 = new GameService(retrofit, "Player 2");
-        executorService.submit(() -> {
+        // Create a list to hold the GameService instances
+        List<GameService> gameServices = new ArrayList<>();
 
-            try {
-                gameService2.playTheGame();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            latch.countDown(); // Decrease the latch count by 1
-        });
+        // Create and submit the GameService instances
+        for (int i = 0; i < n; i++) {
+            GameService gameService = new GameService(retrofit, "Player " + (i + 1));
+            gameServices.add(gameService);
+
+            executorService.submit(() -> {
+                try {
+                    gameService.playTheGame();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown(); // Decrease the latch count by 1
+
+                }
+            });
+        }
 
         // Wait until the latch count reaches 0
         try {
@@ -70,9 +73,14 @@ public class ApplicationService {
             Thread.currentThread().interrupt();
         }
 
-        System.out.println("Both games have finished.");
-        gameService1.printGameData();
-        gameService2.printGameData();
+        logger.info("All games have finished.");
+
+        for (GameService gameService : gameServices) {
+            gameService.printGameResults();
+        }
+
+        GameStatisticsService gameStatisticsService = new GameStatisticsService(gameServices);
+        gameStatisticsService.printGameStatistics();
 
         // Shutdown the executor service
         executorService.shutdown();
