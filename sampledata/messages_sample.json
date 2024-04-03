@@ -1,0 +1,77 @@
+[
+  {
+    "adId": "d9nr4GMf",
+    "message": "Help Carley Robbins to sell an unordinary water on the local market",
+    "reward": 19,
+    "expiresIn": 1,
+    "encrypted": null,
+    "probability": "Walk in the park"
+  },
+  {
+    "adId": "xc4mWyOV",
+    "message": "Create an advertisement campaign for Sandy Herberts to promote their pan based business",
+    "reward": 38,
+    "expiresIn": 1,
+    "encrypted": null,
+    "probability": "Rather detrimental"
+  },
+  {
+    "adId": "yVm6ePLb",
+    "message": "Create an advertisement campaign for Antonija Henderson to promote their pot based business",
+    "reward": 28,
+    "expiresIn": 1,
+    "encrypted": null,
+    "probability": "Suicide mission"
+  },
+  {
+    "adId": "vYW2pWrF",
+    "message": "Help Arwel Haggard to write their biographical novel about their difficulties with a deranged horse",
+    "reward": 28,
+    "expiresIn": 1,
+    "encrypted": null,
+    "probability": "Walk in the park"
+  },
+  {
+    "adId": "iYcQU5G6",
+    "message": "Create an advertisement campaign for Kathrin Robertson to promote their squirrel based business",
+    "reward": 23,
+    "expiresIn": 2,
+    "encrypted": null,
+    "probability": "Risky"
+  },
+  {
+    "adId": "UlUbazx6",
+    "message": "Help Odile Arterberry to write their biographical novel about their difficulties with a deranged dog",
+    "reward": 34,
+    "expiresIn": 3,
+    "probability": "Rather detrimental"
+  },
+  {
+    "adId": "sdMEQxGX",
+    "message": "Help Cormag Gilbert to transport a magic bucket to grassland in Northshore",
+    "reward": 16,
+    "expiresIn": 4,
+    "probability": "Piece of cake"
+  },
+  {
+    "adId": "6Hw7J5O4",
+    "message": "Help Xia Spalding to sell an unordinary cat on the local market",
+    "reward": 18,
+    "expiresIn": 5,
+    "probability": "Sure thing"
+  },
+  {
+    "adId": "qNfVxdUd",
+    "message": "Create an advertisement campaign for Philbert Thorburn to promote their pot based business",
+    "reward": 19,
+    "expiresIn": 6,
+    "probability": "Quite likely"
+  },
+  {
+    "adId": "MV9vWhGB",
+    "message": "Help Pompeius Hollands to write their biographical novel about their difficulties with a deranged horse",
+    "reward": 34,
+    "expiresIn": 7,
+    "probability": "Risky"
+  }
+]
